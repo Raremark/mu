@@ -3,7 +3,7 @@
 {
 set -e
 
-REPO=stelligent/mu
+REPO=Raremark/mu
 LATEST_VERSION=`curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/'`
 INSTALL_VERSION=${INSTALL_VERSION:-$LATEST_VERSION}
 INSTALL_DIR=${INSTALL_DIR:-/usr/local/bin}

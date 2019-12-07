@@ -106,16 +106,17 @@ build: info gen
 
 install: build
 	@echo "=== installing $(PACKAGE)-$(OS)-$(ARCH) ==="
-	@cp dist/$(OS)_$(ARCH)/$(PACKAGE) /usr/local/bin/mu
-	@chmod 755 /usr/local/bin/mu
+	@sudo cp dist/$(PACKAGE)_$(OS)_$(ARCH)/$(PACKAGE) /usr/local/bin/mu
+	@sudo chmod 755 /usr/local/bin/mu
 	@mu -v
 
+#aws s3 cp dist/linux_amd64/mu s3://$$BUCKET_NAME/$(TAG_VERSION)/$(PACKAGE)-linux-amd64 --acl public-read
 stage: fmt build
 	@echo "=== staging to S3 bucket ==="
 	@export BUCKET_NAME=mu-staging-$$(aws sts get-caller-identity --output text --query 'Account') ;\
 	aws s3 mb s3://$$BUCKET_NAME || echo "bucket exists" ;\
 	aws s3 website --index-document index.html s3://$$BUCKET_NAME ;\
-	aws s3 cp dist/linux_amd64/mu s3://$$BUCKET_NAME/$(TAG_VERSION)/$(PACKAGE)-linux-amd64 --acl public-read ;\
+	aws s3 cp dist/$(PACKAGE)_$(OS)_$(ARCH)/$(PACKAGE) s3://$$BUCKET_NAME/$(TAG_VERSION)/$(PACKAGE)-linux-amd64 --acl public-read ;\
 	echo https://$$BUCKET_NAME.s3.amazonaws.com
 
 keypair:
